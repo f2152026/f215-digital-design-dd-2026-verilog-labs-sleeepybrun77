@@ -32,6 +32,49 @@ module cla4(
   wire c1, c2, c3;
 
   // TODO: your gate-level P/G, carry, and sum logic goes here.
+
+  //Step1
+
+  xor #(2,3) (p0, a[0], b[0]);
+  xor #(2,3) (p1, a[1], b[1]);
+  xor #(2,3) (p2, a[2], b[2]);
+  xor #(2,3) (p3, a[3], b[3]);
+
+  and #(4,3) (g0, a[0], b[0]);
+  and #(4,3) (g1, a[1], b[1]);
+  and #(4,3) (g2, a[2], b[2]);
+  and #(4,3) (g3, a[3], b[3]);
+
   // (cout should be connected to c4.) Remember the delay on every gate.
+  //Step 2
+
+  wire t1_0;
+  and #(4,3) (t1_0, p0, cin);
+  or  #(1,3) (c1, g0, t1_0);
+
+  wire t2_0, t2_1;
+  and #(4,3) (t2_0, p1, g0);
+  and #(4,3) (t2_1, p1, p0, cin);
+  or  #(1,3) (c2, g1, t2_0, t2_1);
+
+  wire t3_0, t3_1, t3_2;
+  and #(4,3) (t3_0, p2, g1);
+  and #(4,3) (t3_1, p2, p1, g0);
+  and #(4,3) (t3_2, p2, p1, p0, cin);
+  or  #(1,3) (c3, g2, t3_0, t3_1, t3_2);
+
+  wire t4_0, t4_1, t4_2, t4_3;
+  and #(4,3) (t4_0, p3, g2);
+  and #(4,3) (t4_1, p3, p2, g1);
+  and #(4,3) (t4_2, p3, p2, p1, g0);
+  and #(4,3) (t4_3, p3, p2, p1, p0, cin);
+  or  #(1,3) (cout, g3, t4_0, t4_1, t4_2, t4_3);
+
+  // Step 3
+  
+  xor #(1,5) (sum[0], p0, cin);
+  xor #(1,5) (sum[1], p1, c1);
+  xor #(1,5) (sum[2], p2, c2);
+  xor #(1,5) (sum[3], p3, c3);
 
 endmodule
